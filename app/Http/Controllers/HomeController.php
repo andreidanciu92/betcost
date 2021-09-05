@@ -96,6 +96,7 @@ class HomeController extends Controller
                     Bet::select(
                         'bets.id AS id_bet',
                         'bets.user_won',
+                        'bets.user_id',
                         'bets.created_at AS data_scommessa',
                         'team1.name AS team_a_name',
                         'team2.name AS team_b_name',
@@ -115,9 +116,17 @@ class HomeController extends Controller
                 $ranking = array();
 
                 $users = User::all();
-                foreach ($all_bets AS $user) {
-
+                foreach ($users AS $user) {
+                    $ranking[$user->id] = 0;
                 }
+
+                foreach ($all_bets AS $bet) {
+                    if($bet->user_won) {
+                        $ranking[$bet->user_id] += 1;
+                    }
+                }
+
+                arsort($ranking);
 
                 return view('home',
                     [

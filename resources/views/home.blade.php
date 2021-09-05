@@ -99,9 +99,9 @@
                             <form method="POST" action="{{ route('get-ranking') }}">
                                 @csrf
                                 @if(!empty($ranking))
-                                    @foreach($ranking AS $ranks)
+                                    @foreach($ranking AS $user_id => $points)
                                         <div class="col-md-12">
-                                            {{$bet->user_name}} bet on {{$bet->team_user_bet_on_name}} in {{$bet->team_a_name}} VS {{$bet->team_b_name}} match at {{$bet->data_scommessa}}
+                                            {{$user_id}} has {{$points}} points
                                         </div>
                                     @endforeach
                                 @endif

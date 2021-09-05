@@ -7,6 +7,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Match;
 use Illuminate\Support\Facades\DB;
+use App\Bet;
 
 class MatchesController extends Controller
 {
@@ -61,15 +62,35 @@ class MatchesController extends Controller
                 $losers[] = $flight->team_a == $winner ? $flight->team_a : $flight->team_b;
             }
 
-            // UPDATE WINNING TEAMS, REMOVING IDLE SO THEY CAN PLAY AGAIN
-            Team::whereIn('id', $winners)->update(['is_idle' => 0]);
+            // CALCULATE WHO HAS WON THE BETS
+            $this->updateBets($winners);
 
-            // UPDATE LOSING TEAMS, REMOVING THEM FROM THE TOURNAMENT
-            Team::whereIn('id', $losers)->update(['is_idle' => 0, 'is_active' => 0]);
+            // UPDATE TEAMS
+            $this->updateTeams($winners, $losers);
 
         }
 
         return redirect(route('home'));
+    }
+
+    private function updateBets($winners = array())
+    {
+        foreach ($winners as $id_match => $winner) {
+            Bet::where('match_id', '=', $id_match)->where('teams_user_bet_on', '=', $winner)->update(['user_won' => 1]);
+        }
+    }
+
+    private function updateTeams($winners = array(), $losers = array())
+    {
+        if(!empty($winners)) {
+            // UPDATE WINNING TEAMS, REMOVING IDLE SO THEY CAN PLAY AGAIN
+            Team::whereIn('id', $winners)->update(['is_idle' => 0]);
+        }
+
+        if(!empty($losers)) {
+            // UPDATE LOSING TEAMS, REMOVING THEM FROM THE TOURNAMENT
+            Team::whereIn('id', $losers)->update(['is_idle' => 0, 'is_active' => 0]);
+        }
     }
 
 }
