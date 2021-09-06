@@ -38,6 +38,7 @@ class HomeController extends Controller
         $matches_to_be_bet_on = array();
 
         $user = Auth::user();
+        $now = Carbon::now();
 
         if($user) {
             if ($user->is_admin) {
@@ -56,7 +57,7 @@ class HomeController extends Controller
                             'matches.*')
                         ->join('teams AS team1', 'team1.id', '=', 'matches.team_a')
                         ->join('teams AS team2', 'team2.id', '=', 'matches.team_b')
-                        ->where('end_date', '<', Carbon::now())
+                        ->where('end_date', '<', $now)
                         ->get();
 
                 return view('home_bo', ['teams' => $teams, 'concluded_matches' => $concluded_matches]);
@@ -71,10 +72,11 @@ class HomeController extends Controller
                             'team2.name AS team_b_name',
                             'team1.flag AS team_a_flag',
                             'team2.flag AS team_b_flag',
+                            'matches.start_date',
                             'matches.*')
                         ->join('teams AS team1', 'team1.id', '=', 'matches.team_a')
                         ->join('teams AS team2', 'team2.id', '=', 'matches.team_b')
-                        ->where('start_date', '>', 'NOW() - INTERVAL 30 MINUTE')
+                        //->where(Carbon::now(), '<', 'matches.start_date - 30min')
                         ->get();
 
                 // MATCHES THAT THE USER HAS ALREADY BET ON
@@ -84,8 +86,14 @@ class HomeController extends Controller
                     // RIMUOVI DALL'ARRAY TUTTI I MATCH SUI QUALI L'UTENTE HA GIA' SCOMMESSO
                     foreach ($matches_user_has_bet_already as $match_already_bet) {
                         foreach ($matches_to_be_bet_on as $k => $match_to_be_bet) {
-                            if ($match_to_be_bet->id == $match_already_bet->match_id) {
+
+                            if($now < Carbon::createFromFormat('Y-m-d H:i:s', $match_to_be_bet->start_date)) {
                                 unset($matches_to_be_bet_on[$k]);
+                                continue;
+                            }
+
+                            if ($match_to_be_bet->id == $match_already_bet->match_id) {
+                                $matches_to_be_bet_on[$k]['user_bet_on'] = $match_already_bet->team_user_bet_on;
                             }
                         }
                     }
@@ -102,30 +110,44 @@ class HomeController extends Controller
                         'team2.name AS team_b_name',
                         'users.name AS user_name',
                         'team_user_bet_on.name AS team_user_bet_on_name',
-                        'matches.is_over')
+                        'matches.is_over',
+                        'matches.start_date')
                         ->join('users', 'bets.user_id', '=', 'users.id')
                         ->join('matches', 'bets.match_id', '=', 'matches.id')
                         ->join('teams AS team1', 'team1.id', '=', 'matches.team_a')
                         ->join('teams AS team2', 'team2.id', '=', 'matches.team_b')
                         ->join('teams AS team_user_bet_on', 'team_user_bet_on.id', '=', 'bets.team_user_bet_on')
                         ->orderBy('bets.created_at', 'desc')
-                        //->where('start_date', '<', 'NOW() - INTERVAL 30 MINUTE') @TODO finish this
+                        //->where(Carbon::now(), '<', 'matches.start_date - 30min')
                         ->get();
 
                 // GET ALL USERS AND CALCULATE RANKING
                 $ranking = array();
 
-                $users = User::all();
-                foreach ($users AS $user) {
-                    $ranking[$user->id] = 0;
-                }
+                // SET DEFAULT FOR ALL USERS TO 0
+                $users_bets = User::select('users.name',
+                    'bets.user_won')
+                    ->join('bets', 'users.id', '=', 'bets.user_id')
+                    ->get();
 
-                foreach ($all_bets AS $bet) {
+
+                dd($ranking);
+                die;
+
+                foreach ($all_bets AS $k => $bet) {
+
+                    // SHOW RANKING ONLY WHEN THE MATCHES ARE NO LONGER BETTABLE
+                    if($now < Carbon::createFromFormat('Y-m-d H:i:s', $bet->start_date)) {
+                        unset($all_bets[$k]);
+                        continue;
+                    }
+
                     if($bet->user_won) {
-                        $ranking[$bet->user_id] += 1;
+                        $ranking[$bet->user_id]['points'] += 1;
                     }
                 }
 
+                // SORT BY POINTS DESC
                 arsort($ranking);
 
                 return view('home',

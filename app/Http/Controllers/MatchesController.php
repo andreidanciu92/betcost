@@ -49,7 +49,7 @@ class MatchesController extends Controller
         $matches_outcome = $request->input('winners');
 
         if(!empty($matches_outcome)) {
-            $winners = array_keys($matches_outcome);
+            $winners = array_values($matches_outcome);
 
             // UPDATE MATCHES, SET WINNERS AND END MATCH
             foreach ($matches_outcome as $id_match => $winner) {
@@ -59,13 +59,13 @@ class MatchesController extends Controller
                 $flight->is_over = 1;
                 $flight->save();
 
-                $losers[] = $flight->team_a == $winner ? $flight->team_a : $flight->team_b;
+                $losers[] = $flight->team_a == $winner ? $flight->team_b : $flight->team_a;
             }
 
             // CALCULATE WHO HAS WON THE BETS
-            $this->updateBets($winners);
+            $this->updateBets($matches_outcome);
 
-            // UPDATE TEAMS
+            // UPDATE TEAMS STATUS
             $this->updateTeams($winners, $losers);
 
         }
@@ -73,15 +73,16 @@ class MatchesController extends Controller
         return redirect(route('home'));
     }
 
-    private function updateBets($winners = array())
+    private function updateBets($matches_outcome = array())
     {
-        foreach ($winners as $id_match => $winner) {
-            Bet::where('match_id', '=', $id_match)->where('teams_user_bet_on', '=', $winner)->update(['user_won' => 1]);
+        foreach ($matches_outcome as $id_match => $winner) {
+            Bet::where('match_id', '=', $id_match)->where('team_user_bet_on', '=', $winner)->update(['user_won' => 1]);
         }
     }
 
     private function updateTeams($winners = array(), $losers = array())
     {
+
         if(!empty($winners)) {
             // UPDATE WINNING TEAMS, REMOVING IDLE SO THEY CAN PLAY AGAIN
             Team::whereIn('id', $winners)->update(['is_idle' => 0]);
