@@ -87,11 +87,6 @@ class HomeController extends Controller
                     foreach ($matches_user_has_bet_already as $match_already_bet) {
                         foreach ($matches_to_be_bet_on as $k => $match_to_be_bet) {
 
-                            if($now < Carbon::createFromFormat('Y-m-d H:i:s', $match_to_be_bet->start_date)->subMinutes(30)) {
-                                unset($matches_to_be_bet_on[$k]);
-                                continue;
-                            }
-
                             if ($match_to_be_bet->id == $match_already_bet->match_id) {
                                 $matches_to_be_bet_on[$k]['user_bet_on'] = $match_already_bet->team_user_bet_on;
                             }
@@ -120,6 +115,12 @@ class HomeController extends Controller
                         ->orderBy('bets.created_at', 'desc')
                         //->where(Carbon::now(), '<', 'matches.start_date - 30min')
                         ->get();
+
+                foreach ($all_bets AS $k => $bet) {
+                    if($now < Carbon::createFromFormat('Y-m-d H:i:s', $bet->start_date)->subMinutes(30)) {
+                        unset($all_bets[$k]);
+                    }
+                }
 
                 // GET ALL USERS AND CALCULATE RANKING
                 $ranking = Bet::select(
