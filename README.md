@@ -45,3 +45,6 @@ As an Admin, you can close the match in the UPDATE MATCH RESULTS tab. You can on
 - By closing the match, the users that placed their bet on the right team get 1 point, otherwise 0.
 - Once the match is closed the losers will be eliminated
 
+Laravel 7.3
+Php 7.3
+Bootstrap
