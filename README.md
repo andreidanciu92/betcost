@@ -1,5 +1,5 @@
 ## STEP0 
-Create new DB
+Create new DB and install dependencies with composer install
 
 ## STEP1 Insert teams into the DB after creating tables with php artisan:migrate
 INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('England', 'gb-eng', 0, 1);
