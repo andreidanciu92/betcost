@@ -1,5 +1,4 @@
-## STEP1 
-Insert teams into the DB after creating tables with php artisan:migrate
+## STEP1 Insert teams into the DB after creating tables with php artisan:migrate
 INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('England', 'gb-eng', 0, 1);
 INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Czech Republic', 'cz', 0, 1);
 INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Ukraine', 'uk', 0, 1);
