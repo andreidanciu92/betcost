@@ -87,7 +87,7 @@ class HomeController extends Controller
                     foreach ($matches_user_has_bet_already as $match_already_bet) {
                         foreach ($matches_to_be_bet_on as $k => $match_to_be_bet) {
 
-                            if($now < Carbon::createFromFormat('Y-m-d H:i:s', $match_to_be_bet->start_date)) {
+                            if($now < Carbon::createFromFormat('Y-m-d H:i:s', $match_to_be_bet->start_date)->subMinutes(30)) {
                                 unset($matches_to_be_bet_on[$k]);
                                 continue;
                             }
