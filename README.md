@@ -1,78 +1,43 @@
-<p align="center"><img src="https://res.cloudinary.com/dtfbvvkyp/image/upload/v1566331377/laravel-logolockup-cmyk-red.svg" width="400"></p>
+## STEP1 
+Insert teams into the DB after creating tables with php artisan:migrate
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('England', 'gb-eng', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Czech Republic', 'cz', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Ukraine', 'uk', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Portugal', 'pt', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Germany', 'de', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Netherlands', 'nl', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Switzerland', 'ch', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Denmark', 'dk', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Croatia', 'hr', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Wales', 'gb-wls', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Spain', 'es', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Sweden', 'se', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Poland', 'pl', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Austria', 'at', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('France', 'fr', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Turkey', 'tr', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Belgium', 'be', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Russia', 'ru', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Italy', 'it', 0, 1);
+INSERT INTO teams (name, flag, is_idle, is_active) VALUES ('Finland', 'fi', 0, 1);
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+## STEP2
+Register a new account. 
+By default it will be a normal user, if u want to make it an Admin user, update is_admin value to 1 in Users table.
 
-## About Laravel
+## STEP3
+As an Admin Go to NEW MATCH tab and create a new match after selecting 2 teams and start date for the match
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## STEP4 
+As a normal user go to NEW BETS tab and place a bet on a team. The bets will be viewable until 30 minutes before the match starts. After that the match will dissapear from the tab.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## STEP5 
+As an Admin, you can close the match in the UPDATE MATCH RESULTS tab. You can only see matches that are beyond the end_date (by default start_date +2h).
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## How it works
+- As a normal user you can only see the Dashboard.
+- As an admin you can only see the Backoffice section.
+- You can check all bets made by players in the ALL BETS tab. The bets are viewable only if the match is not bettable any more.
+- In the USER RANKING tab you can see the rankings.
+- By closing the match, the users that placed their bet on the right team get 1 point, otherwise 0.
 
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- [UserInsights](https://userinsights.com)
-- [Fragrantica](https://www.fragrantica.com)
-- [SOFTonSOFA](https://softonsofa.com/)
-- [User10](https://user10.com)
-- [Soumettre.fr](https://soumettre.fr/)
-- [CodeBrisk](https://codebrisk.com)
-- [1Forge](https://1forge.com)
-- [TECPRESSO](https://tecpresso.co.jp/)
-- [Runtime Converter](http://runtimeconverter.com/)
-- [WebL'Agence](https://weblagence.com/)
-- [Invoice Ninja](https://www.invoiceninja.com)
-- [iMi digital](https://www.imi-digital.de/)
-- [Earthlink](https://www.earthlink.ro/)
-- [Steadfast Collective](https://steadfastcollective.com/)
-- [We Are The Robots Inc.](https://watr.mx/)
-- [Understand.io](https://www.understand.io/)
-- [Abdel Elrafa](https://abdelelrafa.com)
-- [Hyper Host](https://hyper.host)
-- [Appoly](https://www.appoly.co.uk)
-- [OP.GG](https://op.gg)
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
