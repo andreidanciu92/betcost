@@ -39,7 +39,9 @@ As an Admin, you can close the match in the UPDATE MATCH RESULTS tab. You can on
 ## How it works
 - As a normal user you can only see the Dashboard.
 - As an admin you can only see the Backoffice section.
+- By creating a new match, you cannot select both the teams until the match is over (admin has to close it).
 - You can check all bets made by players in the ALL BETS tab. The bets are viewable only if the match is not bettable any more.
 - In the USER RANKING tab you can see the rankings.
 - By closing the match, the users that placed their bet on the right team get 1 point, otherwise 0.
+- Once the match is closed the losers will be eliminated
 
