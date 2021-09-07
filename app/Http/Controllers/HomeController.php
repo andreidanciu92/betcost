@@ -122,33 +122,13 @@ class HomeController extends Controller
                         ->get();
 
                 // GET ALL USERS AND CALCULATE RANKING
-                $ranking = array();
-
-                // SET DEFAULT FOR ALL USERS TO 0
-                $users_bets = User::select('users.name',
-                    'bets.user_won')
-                    ->join('bets', 'users.id', '=', 'bets.user_id')
+                $ranking = Bet::select(
+                    DB::raw("SUM(user_won) as points"),
+                    DB::raw("max(u.name) as name"))
+                    ->join('users AS u', 'u.id', '=', 'bets.user_id')
+                    ->groupBy('user_id')
+                    ->orderBy('points', 'DESC')
                     ->get();
-
-
-                dd($ranking);
-                die;
-
-                foreach ($all_bets AS $k => $bet) {
-
-                    // SHOW RANKING ONLY WHEN THE MATCHES ARE NO LONGER BETTABLE
-                    if($now < Carbon::createFromFormat('Y-m-d H:i:s', $bet->start_date)) {
-                        unset($all_bets[$k]);
-                        continue;
-                    }
-
-                    if($bet->user_won) {
-                        $ranking[$bet->user_id]['points'] += 1;
-                    }
-                }
-
-                // SORT BY POINTS DESC
-                arsort($ranking);
 
                 return view('home',
                     [
